@@ -87,6 +87,31 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
+          {/** */}
+          <View style={styles.ButtonContainer}>
+            <View style={{ flex: 1 }}>
+              <Icon name="camera" fill="#000"></Icon>
+            </View>
+            <View
+              style={{
+                flex: 3,
+                justifyContent: "center",
+              }}
+            >
+              <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
+                QR Okut
+              </Text>
+            </View>
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity style={styles.ActionButton}>
+                <Icon
+                  style={{ width: 30, height: 30 }}
+                  name="arrow-ios-forward-outline"
+                  fill="#000"
+                ></Icon>
+              </TouchableOpacity>
+            </View>
+          </View>
           {/**/}
           <View style={styles.ButtonContainer}>
             <View style={{ flex: 1 }}>

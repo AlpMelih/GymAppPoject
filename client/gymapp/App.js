@@ -7,11 +7,14 @@ import AuthNavigator from "./navigation/AuthNavigator";
 
 const App = () => {
   return (
-    <ApplicationProvider {...eva} theme={eva.light} icons={EvaIconsPack}>
-      <NavigationContainer>
-        <AuthNavigator />
-      </NavigationContainer>
-    </ApplicationProvider>
+    <>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={eva.light}>
+        <NavigationContainer>
+          <AuthNavigator />
+        </NavigationContainer>
+      </ApplicationProvider>
+    </>
   );
 };
 

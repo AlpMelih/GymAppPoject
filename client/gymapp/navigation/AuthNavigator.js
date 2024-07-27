@@ -5,6 +5,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import HomeScreen from "../screens/HomeScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChatGpt from "../screens/ChatGemini";
+import Map from "../screens/Map";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,7 @@ const AppTabs = () => {
         options={{ headerShown: false }}
       />
       <Tab.Screen name="ChatGPT" component={ChatGpt} />
-      <Tab.Screen name="Other" component={RegisterScreen} />
+      <Tab.Screen name="Harita" component={Map} />
     </Tab.Navigator>
   );
 };

@@ -25,15 +25,10 @@ export default function ChatGemini() {
     setAnswer("");
 
     try {
-      const response = await axios.post(
-        "AIzaSyA2q1JDCLpbgKSBbJ9F0VcBHr2EKB3xe3w",
-        {
-          // Update with Gemini AI specific request body format
-          question: question,
-          // Additional information specific to Gemini AI API (optional)
-        }
-      );
-      // Update based on Gemini AI response format (likely under "answer" key)
+      const response = await axios.post("APİ", {
+        question: question,
+      });
+
       setAnswer(response.data.answer);
     } catch (error) {
       console.error(error);
@@ -45,20 +40,18 @@ export default function ChatGemini() {
   };
 
   return (
-    <ApplicationProvider {...eva} theme={eva.light}>
-      <View style={styles.container}>
-        <Text category="h1">Gemini AI ile Soru Sor</Text>
-        <Input
-          value={question}
-          placeholder="Sormak istediğiniz soruyu yazın"
-          onChangeText={setQuestion}
-          style={styles.input}
-        />
-        <Button onPress={handleQuestionSubmit}>Soru Sor</Button>
-        {loading && <Spinner style={styles.spinner} />}
-        {answer ? <Text style={styles.answer}>{answer}</Text> : null}
-      </View>
-    </ApplicationProvider>
+    <View style={styles.container}>
+      <Text category="h1">Gemini AI ile Soru Sor</Text>
+      <Input
+        value={question}
+        placeholder="Sormak istediğiniz soruyu yazın"
+        onChangeText={setQuestion}
+        style={styles.input}
+      />
+      <Button onPress={handleQuestionSubmit}>Soru Sor</Button>
+      {loading && <Spinner style={styles.spinner} />}
+      {answer ? <Text style={styles.answer}>{answer}</Text> : null}
+    </View>
   );
 }
 
