@@ -1,10 +1,9 @@
-import React, { useState, useEffect, cloneElement } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../utils/api";
 import { Avatar, Icon, Text } from "@ui-kitten/components";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Size } from "@ui-kitten/components/devsupport";
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -45,12 +44,21 @@ const HomeScreen = ({ navigation }) => {
           source={require("../assets/ALP.jpeg")}
         />
       </View>
-      {/*ÜST ALT AYIRMA */}
       <View style={{ flex: 3 }}>
         <View style={{ flex: 1, margin: 30, alignItems: "center" }}>
           <View style={styles.ButtonContainer}>
-            <View style={{ flex: 1 }}>
-              <Icon name="edit-outline" fill="#000"></Icon>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Icon
+                style={styles.leftIcon}
+                name="edit-outline"
+                fill="#000"
+              ></Icon>
             </View>
             <View style={{ flex: 3, justifyContent: "center" }}>
               <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
@@ -58,7 +66,12 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.ActionButton}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Bilgiler");
+                }}
+                style={styles.ActionButton}
+              >
                 <Icon
                   style={{ width: 30, height: 30 }}
                   name="arrow-ios-forward-outline"
@@ -67,10 +80,19 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/**/}
           <View style={styles.ButtonContainer}>
-            <View style={{ flex: 1 }}>
-              <Icon name="settings-outline" fill="#000"></Icon>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Icon
+                style={styles.leftIcon}
+                name="settings-outline"
+                fill="#000"
+              ></Icon>
             </View>
             <View style={{ flex: 3, justifyContent: "center" }}>
               <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
@@ -78,7 +100,12 @@ const HomeScreen = ({ navigation }) => {
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.ActionButton}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("Ayarlar");
+                }}
+                style={styles.ActionButton}
+              >
                 <Icon
                   style={{ width: 30, height: 30 }}
                   name="arrow-ios-forward-outline"
@@ -87,23 +114,26 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/** */}
           <View style={styles.ButtonContainer}>
-            <View style={{ flex: 1 }}>
-              <Icon name="camera" fill="#000"></Icon>
-            </View>
             <View
               style={{
-                flex: 3,
+                flex: 1,
                 justifyContent: "center",
+                alignItems: "center",
               }}
             >
+              <Icon style={styles.leftIcon} name="camera" fill="#000"></Icon>
+            </View>
+            <View style={{ flex: 3, justifyContent: "center" }}>
               <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
                 QR Okut
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.ActionButton}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("QrScanner")}
+                style={styles.ActionButton}
+              >
                 <Icon
                   style={{ width: 30, height: 30 }}
                   name="arrow-ios-forward-outline"
@@ -112,23 +142,30 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/**/}
           <View style={styles.ButtonContainer}>
-            <View style={{ flex: 1 }}>
-              <Icon name="log-out-outline" fill="#000"></Icon>
-            </View>
             <View
               style={{
-                flex: 3,
+                flex: 1,
                 justifyContent: "center",
+                alignItems: "center",
               }}
             >
+              <Icon
+                style={styles.leftIcon}
+                name="log-out-outline"
+                fill="#000"
+              ></Icon>
+            </View>
+            <View style={{ flex: 3, justifyContent: "center" }}>
               <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
                 Çıkış Yap
               </Text>
             </View>
             <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.ActionButton}>
+              <TouchableOpacity
+                onPress={handleLogout}
+                style={styles.ActionButton}
+              >
                 <Icon
                   style={{ width: 30, height: 30 }}
                   name="arrow-ios-forward-outline"
@@ -150,14 +187,13 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     flex: 1,
-
     alignItems: "center",
     justifyContent: "center",
   },
   avatar: {
-    width: 150, // Adjust the width as needed
-    height: 150, // Adjust the height as needed
-    borderRadius: 75, // Ensure the avatar remains circular
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
   ButtonContainer: {
     flexDirection: "row",
@@ -167,7 +203,6 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
-
   ActionButton: {
     justifyContent: "center",
     alignItems: "center",
@@ -175,6 +210,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 20,
+  },
+  leftIcon: {
+    height: 30,
+    width: 30,
   },
 });
 
