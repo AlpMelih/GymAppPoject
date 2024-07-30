@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
   weight: {
     type: Number, // Weight in kilograms
   },
+  gender: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

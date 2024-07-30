@@ -2,13 +2,31 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../utils/api";
-import { Text, Input, Button, Avatar, useTheme } from "@ui-kitten/components";
+import {
+  Text,
+  Input,
+  Button,
+  Avatar,
+  Select,
+  SelectItem,
+  useTheme,
+  IndexPath,
+} from "@ui-kitten/components";
 
 const UserInfo = ({ navigation }) => {
-  const [user, setUser] = useState({ age: "", height: "", weight: "" });
+  const [user, setUser] = useState({
+    age: "",
+    height: "",
+    weight: "",
+    gender: "",
+  });
   const [loading, setLoading] = useState(true);
   const theme = useTheme();
   const isDarkMode = theme["background-basic-color-1"] === "#222B45";
+  const [selectedGenderIndex, setSelectedGenderIndex] = useState(
+    new IndexPath(-1)
+  );
+  const [genderr, setGenderr] = useState("");
 
   useEffect(() => {
     const getUser = async () => {
@@ -23,6 +41,15 @@ const UserInfo = ({ navigation }) => {
           headers: { "x-auth-token": token },
         });
         setUser(res.data);
+        // Set the selected index based on gender
+        const index =
+          res.data.gender === "Kadın"
+            ? 0
+            : res.data.gender === "Erkek"
+            ? 1
+            : -1;
+        setSelectedGenderIndex(new IndexPath(index));
+        setGenderr(res.data.gender); // Set the initial gender value
       } catch (err) {
         console.error(err);
         navigation.navigate("Login");
@@ -34,6 +61,12 @@ const UserInfo = ({ navigation }) => {
     getUser();
   }, [navigation]);
 
+  useEffect(() => {
+    // Update selectedGenderIndex when genderr changes
+    const index = genderr === "Kadın" ? 0 : genderr === "Erkek" ? 1 : -1;
+    setSelectedGenderIndex(new IndexPath(index));
+  }, [genderr]);
+
   const handleSave = async () => {
     const token = await AsyncStorage.getItem("token");
     if (!token) {
@@ -41,16 +74,24 @@ const UserInfo = ({ navigation }) => {
       return;
     }
 
+    const gender = selectedGenderIndex.row === 0 ? "Kadın" : "Erkek";
+
     try {
       const res = await api.put(
         "/auth/user",
-        { age: user.age, height: user.height, weight: user.weight },
+        {
+          age: user.age,
+          height: user.height,
+          weight: user.weight,
+          gender: gender, // Use the selected gender here
+        },
         {
           headers: { "x-auth-token": token },
         }
       );
       Alert.alert("Başarılı", "Kullanıcı bilgileri başarıyla güncellendi");
       setUser(res.data);
+      setGenderr(gender); // Update genderr state after successful save
     } catch (err) {
       console.error(err);
       Alert.alert("Hata", "Kullanıcı bilgilerini güncellerken hata oluştu");
@@ -107,6 +148,20 @@ const UserInfo = ({ navigation }) => {
         onChangeText={(text) => setUser({ ...user, weight: text })}
         keyboardType="numeric"
       />
+      <Select
+        label="Cinsiyet"
+        value={genderr}
+        selectedIndex={selectedGenderIndex}
+        onSelect={(index) => {
+          const genderValue = index.row === 0 ? "Kadın" : "Erkek";
+          setGenderr(genderValue); // Update genderr state on selection
+          setSelectedGenderIndex(index);
+        }}
+        style={styles.select}
+      >
+        <SelectItem title="Kadın" />
+        <SelectItem title="Erkek" />
+      </Select>
       <Button style={styles.button} onPress={handleSave}>
         Kaydet
       </Button>
@@ -131,8 +186,8 @@ const calculateBMI = (height, weight) => {
 
 const getBMIDescription = (bmi) => {
   if (bmi < 18.5) return "Zayıf";
-  if (bmi >= 18.5 && bmi < 24.9) return "Normal";
-  if (bmi >= 25 && bmi < 29.9) return "Fazla Kilolu";
+  if (bmi >= 18.5 && bmi <= 24.999) return "Normal";
+  if (bmi >= 25 && bmi <= 29.9) return "Fazla Kilolu";
   return "Obez";
 };
 
@@ -163,6 +218,10 @@ const styles = StyleSheet.create({
   button: {
     marginVertical: 20,
     width: "90%",
+  },
+  select: {
+    width: "90%",
+    marginVertical: 10,
   },
   bmiContainer: {
     alignItems: "center",

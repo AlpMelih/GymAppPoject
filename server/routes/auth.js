@@ -103,11 +103,12 @@ router.put("/user", async (req, res) => {
     const user = await User.findById(decoded.user.id);
     if (!user) return res.status(404).json({ msg: "User not found" });
 
-    const { age, height, weight, name } = req.body;
+    const { age, height, weight, name, gender } = req.body;
     user.age = age || user.age;
     user.name = name || user.name;
     user.height = height || user.height;
     user.weight = weight || user.weight;
+    user.gender = gender || user.gender;
 
     await user.save();
 
