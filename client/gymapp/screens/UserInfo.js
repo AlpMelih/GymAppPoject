@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../utils/api";
-import { Text, Input, Button, Avatar } from "@ui-kitten/components";
+import { Text, Input, Button, Avatar, useTheme } from "@ui-kitten/components";
 
 const UserInfo = ({ navigation }) => {
   const [user, setUser] = useState({ age: "", height: "", weight: "" });
   const [loading, setLoading] = useState(true);
+  const theme = useTheme();
+  const isDarkMode = theme["background-basic-color-1"] === "#222B45";
 
   useEffect(() => {
     const getUser = async () => {
@@ -64,7 +66,16 @@ const UserInfo = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDarkMode
+            ? theme["background-basic-color-1"]
+            : "#A5D19E",
+        },
+      ]}
+    >
       <View style={styles.avatarContainer}>
         <Avatar
           style={styles.avatar}
@@ -129,7 +140,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#A5D19E",
     alignItems: "center",
   },
   avatarContainer: {

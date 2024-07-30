@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text, Input, Toggle, Button } from "@ui-kitten/components";
+import { Text, Input, Toggle, Button, useTheme } from "@ui-kitten/components";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../utils/api"; // Make sure you have an API utility to handle requests
 
 const Settings = ({ toggleTheme }) => {
   const [name, setName] = useState(""); // Change username to name
+  const theme = useTheme();
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -55,7 +56,12 @@ const Settings = ({ toggleTheme }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme["background-basic-color-1"] },
+      ]}
+    >
       <Input
         label="Ad"
         value={name}
@@ -64,7 +70,7 @@ const Settings = ({ toggleTheme }) => {
       />
       <View style={styles.toggleContainer}>
         <Text>Karanlık Mod</Text>
-        <Toggle onChange={toggleTheme} />
+        <Toggle checked={theme === "dark"} onChange={toggleTheme} />
       </View>
       <Button onPress={handleNameChange}>Adını Değiştir</Button>
     </View>

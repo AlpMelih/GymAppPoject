@@ -1,56 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { Text, Layout, useTheme } from "@ui-kitten/components";
 
-const QrScanner = ({ navigation }) => {
+const QrScanner = () => {
   const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false); // QR kod okunup okunmadığını takip et
+  const theme = useTheme();
+  const isDarkMode = theme["background-basic-color-1"] === "#222B45";
 
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      console.log("Camera permission status:", status); // Debugging log
       setHasPermission(status === "granted");
     })();
   }, []);
 
   const handleBarCodeScanned = ({ type, data }) => {
-    Alert.alert(`Scanned ${type}`, data); // Display QR code data
-    navigation.goBack(); // Navigate back to the previous screen or do any other action
+    setScanned(true); // QR kod okundu
+    Alert.alert(`QR kod okundu! Tip: ${type}, Veri: ${data}`);
+    // Okunan veriyi işleyebilirsiniz
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting camera permission...</Text>;
+    return <Text>Requesting for camera permission</Text>;
   }
-
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
 
   return (
-    <View style={styles.container}>
+    <Layout
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDarkMode
+            ? theme["background-basic-color-1"]
+            : "#A5D19E",
+        },
+      ]}
+    >
+      <Text
+        category="h1"
+        style={{ color: isDarkMode ? "#fff" : "#333", marginBottom: 20 }}
+      >
+        QR Scanner
+      </Text>
       <BarCodeScanner
-        onBarCodeScanned={handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} // Eğer okunduysa tekrar okuma yapılmasın
+        style={styles.scanner}
       />
-      <Text style={styles.instructions}>Scan a QR code</Text>
-    </View>
+      {!scanned && (
+        <Text style={{ color: isDarkMode ? "#fff" : "#333", marginTop: 20 }}>
+          QR kod okunuyor...
+        </Text>
+      )}
+      {scanned && (
+        <Text style={{ color: isDarkMode ? "#fff" : "#333", marginTop: 20 }}>
+          QR kod okundu!
+        </Text>
+      )}
+    </Layout>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
-  instructions: {
-    position: "absolute",
-    bottom: 20,
-    left: "50%",
-    transform: [{ translateX: -50 }],
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    padding: 10,
-    borderRadius: 5,
-    fontSize: 18,
+  scanner: {
+    height: 200,
+    width: 200,
+    borderWidth: 2,
+    borderColor: "#333",
+    borderRadius: 10,
   },
-});
+};
 
 export default QrScanner;

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../utils/api";
-import { Avatar, Icon, Text } from "@ui-kitten/components";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Avatar, Icon, Text, useTheme } from "@ui-kitten/components";
 
 const HomeScreen = ({ navigation }) => {
   const [name, setName] = useState("");
+  const theme = useTheme();
+  const isDarkMode = theme["background-basic-color-1"] === "#222B45";
 
   useEffect(() => {
     const getUser = async () => {
@@ -36,7 +37,16 @@ const HomeScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: isDarkMode
+            ? theme["background-basic-color-1"]
+            : "#A5D19E",
+        },
+      ]}
+    >
       <View style={styles.avatarContainer}>
         <Avatar
           style={styles.avatar}
@@ -46,134 +56,79 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <View style={{ flex: 3 }}>
         <View style={{ flex: 1, margin: 30, alignItems: "center" }}>
-          <View style={styles.ButtonContainer}>
+          {[
+            {
+              icon: "edit-outline",
+              text: "Bilgileri Düzenle",
+              navigateTo: "Bilgiler",
+            },
+            {
+              icon: "settings-outline",
+              text: "Ayarlar",
+              navigateTo: "Ayarlar",
+            },
+            {
+              icon: "camera",
+              text: "QR Okut",
+              navigateTo: "QrScanner",
+            },
+            {
+              icon: "log-out-outline",
+              text: "Çıkış Yap",
+              action: handleLogout,
+            },
+          ].map((item, index) => (
             <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              style={[
+                styles.ButtonContainer,
+                {
+                  backgroundColor: isDarkMode
+                    ? theme["background-basic-color-2"]
+                    : "rgba(255, 255, 255, 0.5)",
+                },
+              ]}
+              key={index}
             >
-              <Icon
-                style={styles.leftIcon}
-                name="edit-outline"
-                fill="#000"
-              ></Icon>
-            </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
-                Bilgileri Düzenle
-              </Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Bilgiler");
-                }}
-                style={styles.ActionButton}
-              >
+              <View style={styles.iconContainer}>
                 <Icon
-                  style={{ width: 30, height: 30 }}
-                  name="arrow-ios-forward-outline"
-                  fill="#000"
-                ></Icon>
-              </TouchableOpacity>
+                  style={styles.leftIcon}
+                  name={item.icon}
+                  fill={theme["text-basic-color"]}
+                />
+              </View>
+              <View style={{ flex: 3, justifyContent: "center" }}>
+                <Text
+                  category="p1"
+                  style={[styles.text, { color: theme["text-basic-color"] }]}
+                >
+                  {item.text}
+                </Text>
+              </View>
+              <View style={{ flex: 1 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    item.action
+                      ? item.action()
+                      : navigation.navigate(item.navigateTo)
+                  }
+                  style={[
+                    styles.ActionButton,
+                    {
+                      backgroundColor: isDarkMode
+                        ? theme["background-basic-color-3"]
+                        : "rgba(255, 255, 255, 0.55)",
+                    },
+                  ]}
+                >
+                  <Icon
+                    style={styles.rightIcon}
+                    name="arrow-ios-forward-outline"
+                    fill={theme["text-basic-color"]}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.ButtonContainer}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon
-                style={styles.leftIcon}
-                name="settings-outline"
-                fill="#000"
-              ></Icon>
-            </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
-                Ayarlar
-              </Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Ayarlar");
-                }}
-                style={styles.ActionButton}
-              >
-                <Icon
-                  style={{ width: 30, height: 30 }}
-                  name="arrow-ios-forward-outline"
-                  fill="#000"
-                ></Icon>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.ButtonContainer}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon style={styles.leftIcon} name="camera" fill="#000"></Icon>
-            </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
-                QR Okut
-              </Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate("QrScanner")}
-                style={styles.ActionButton}
-              >
-                <Icon
-                  style={{ width: 30, height: 30 }}
-                  name="arrow-ios-forward-outline"
-                  fill="#000"
-                ></Icon>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.ButtonContainer}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Icon
-                style={styles.leftIcon}
-                name="log-out-outline"
-                fill="#000"
-              ></Icon>
-            </View>
-            <View style={{ flex: 3, justifyContent: "center" }}>
-              <Text category="p1" style={{ margin: 15, fontSize: 20 }}>
-                Çıkış Yap
-              </Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity
-                onPress={handleLogout}
-                style={styles.ActionButton}
-              >
-                <Icon
-                  style={{ width: 30, height: 30 }}
-                  name="arrow-ios-forward-outline"
-                  fill="#000"
-                ></Icon>
-              </TouchableOpacity>
-            </View>
-          </View>
+          ))}
         </View>
       </View>
     </View>
@@ -183,7 +138,6 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#A5D19E",
   },
   avatarContainer: {
     flex: 1,
@@ -201,12 +155,19 @@ const styles = StyleSheet.create({
     width: "90%",
     borderRadius: 20,
     margin: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.5)",
+  },
+  iconContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    margin: 15,
+    fontSize: 20,
   },
   ActionButton: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.55)",
     width: "100%",
     height: "100%",
     borderRadius: 20,
@@ -214,6 +175,10 @@ const styles = StyleSheet.create({
   leftIcon: {
     height: 30,
     width: 30,
+  },
+  rightIcon: {
+    width: 30,
+    height: 30,
   },
 });
 
